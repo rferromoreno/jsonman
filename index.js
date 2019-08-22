@@ -1,13 +1,17 @@
-const fs = require('fs');
-const R = require('ramda');
+import R from 'ramda';
+import parse from './src/parser';
 
 function Main() {
   const args = process.argv.slice(2);
-  var olderPath = args[0];
-  var latestPath = args[1];
-  var olderJSON = JSON.parse(fs.readFileSync(olderPath, 'utf8'));
-  var latestJSON = JSON.parse(fs.readFileSync(latestPath, 'utf8'));
-  console.log(R.equals(olderJSON, latestJSON));
+  const olderPath = args[0];
+  const latestPath = args[1];
+  try {
+    var olderJSON = parse(olderPath);
+    var latestJSON = parse(latestPath);
+    console.log(R.equals(olderJSON, latestJSON));
+  } catch (error) {
+    console.error(`Could not apply the comparison between both files.`);
+  }
 }
 
 module.exports = Main;
